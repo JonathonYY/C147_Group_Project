@@ -5,10 +5,9 @@
 # LICENSE file in the root directory of this source tree.
 
 from collections.abc import Sequence
-
 import torch
 import logging
-from torch import nn
+from torch import nn, Tensor
 
 
 class SpectrogramNorm(nn.Module):
@@ -30,7 +29,6 @@ class SpectrogramNorm(nn.Module):
     def __init__(self, channels: int) -> None:
         super().__init__()
         self.channels = channels
-
         self.batch_norm = nn.BatchNorm2d(channels)
 
     def forward(self, inputs: torch.Tensor) -> torch.Tensor:
@@ -280,12 +278,13 @@ class TDSConvEncoder(nn.Module):
     def forward(self, inputs: torch.Tensor) -> torch.Tensor:
         return self.tds_conv_blocks(inputs)  # (T, N, num_features)
 
+
 class TDSLSTMEncoder(nn.Module):
     def __init__(
-            self,
-            num_features: int,
-            lstm_hidden_size: int = 128,
-            num_lstm_layers: int = 4,
+        self,
+        num_features: int,
+        lstm_hidden_size: int = 128,
+        num_lstm_layers: int = 4,
     ) -> None:
         super().__init__()
 
@@ -293,17 +292,91 @@ class TDSLSTMEncoder(nn.Module):
             input_size=num_features,
             hidden_size=lstm_hidden_size,
             num_layers=num_lstm_layers,
-            batch_first=False, # Input shape: (T, N, num_features)
-            bidirectional=True
+            batch_first=False,  # Input shape: (T, N, num_features)
+            bidirectional=True,
         )
 
         # Fully connected block (remains the same)
         self.fc_block = TDSFullyConnectedBlock(lstm_hidden_size * 2)
         self.out_layer = nn.Linear(lstm_hidden_size * 2, num_features)
-    
+
     def forward(self, inputs: torch.Tensor) -> torch.Tensor:
-        x, _ = self.lstm_layers(inputs) # (T, N, lstm_hidden_size * 2)
-        x = self.fc_block(x) # Apply FC transformation
+        x, _ = self.lstm_layers(inputs)  # (T, N, lstm_hidden_size * 2)
+        x = self.fc_block(x)  # Apply FC transformation
         x = self.out_layer(x)
         logging.getLogger(__name__).warning("forward step LSTM run")
         return x
+
+
+class CNNRNNHybrid(nn.Module):
+    """A hybrid model combining CNN and RNN for sequential data with spatial structure.
+
+    Args:
+        input_channels (int): Number of input channels (e.g., for spectrograms or images).
+        cnn_features (int): Number of output features from the CNN encoder.
+        rnn_hidden_size (int): Hidden size of the RNN.
+        num_rnn_layers (int): Number of RNN layers.
+        num_classes (int): Number of output classes for classification.
+    """
+
+    def __init__(
+        self,
+        input_channels: int,
+        cnn_features: int,
+        rnn_hidden_size: int,
+        num_rnn_layers: int,
+        num_classes: int,
+    ) -> None:
+        super().__init__()
+
+        # CNN Encoder (e.g., TDSConvEncoder)
+        self.cnn_encoder = TDSConvEncoder(
+            num_features=input_channels,
+            block_channels=[cnn_features] * 4,  # Example: 4 CNN blocks
+            kernel_width=3,  # Example kernel width
+        )
+
+        # RNN Encoder (e.g., TDSLSTMEncoder)
+        self.rnn_encoder = TDSLSTMEncoder(
+            num_features=cnn_features,
+            lstm_hidden_size=rnn_hidden_size,
+            num_lstm_layers=num_rnn_layers,
+        )
+
+        # Fully connected layer for classification
+        self.fc = nn.Linear(rnn_hidden_size * 2, num_classes)  # Bidirectional LSTM
+
+    def forward(self, inputs: Tensor) -> Tensor:
+        """Forward pass for the hybrid CNN + RNN model.
+
+        Args:
+            inputs (Tensor): Input tensor of shape (T, N, C, H, W) where:
+                - T: Sequence length
+                - N: Batch size
+                - C: Input channels
+                - H, W: Spatial dimensions (e.g., height, width)
+
+        Returns:
+            Tensor: Output logits of shape (N, num_classes).
+        """
+        T, N, C, H, W = inputs.shape
+
+        # Reshape input for CNN: (T, N, C, H, W) -> (T * N, C, H, W)
+        x = inputs.view(T * N, C, H, W)
+
+        # Pass through CNN encoder
+        x = self.cnn_encoder(x)  # Output shape: (T * N, cnn_features)
+
+        # Reshape back to sequence: (T * N, cnn_features) -> (T, N, cnn_features)
+        x = x.view(T, N, -1)
+
+        # Pass through RNN encoder
+        x = self.rnn_encoder(x)  # Output shape: (T, N, rnn_hidden_size * 2)
+
+        # Take the last time step's output for classification
+        x = x[-1, :, :]  # Shape: (N, rnn_hidden_size * 2)
+
+        # Pass through fully connected layer
+        logits = self.fc(x)  # Shape: (N, num_classes)
+
+        return logits

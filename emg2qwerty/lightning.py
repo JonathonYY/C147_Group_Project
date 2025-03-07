@@ -170,18 +170,15 @@ class TDSConvCTCModule(pl.LightningModule):
             ),
             # (T, N, num_features)
             nn.Flatten(start_dim=2),
-            # TDSConvEncoder(
-            #     num_features=num_features,
-            #     block_channels=block_channels,
-            #     kernel_width=kernel_width,
-            # ),
-            TDSLSTMEncoder(
-                num_features=num_features,
-                lstm_hidden_size=128,
-                num_lstm_layers=4
+            # Replace TDSConvEncoder or TDSLSTMEncoder with CNNRNNHybrid
+            CNNRNNHybrid(
+                input_channels=num_features,  # Input to CNN
+                cnn_features=64,  # Output features from CNN
+                rnn_hidden_size=128,  # Hidden size of RNN
+                num_rnn_layers=2,  # Number of RNN layers
+                num_classes=charset().num_classes,  # Output classes
             ),
             # (T, N, num_classes)
-            nn.Linear(num_features, charset().num_classes),
             nn.LogSoftmax(dim=-1),
         )
 
