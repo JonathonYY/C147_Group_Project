@@ -7,7 +7,6 @@
 from collections.abc import Sequence
 
 import torch
-import logging
 from torch import nn
 
 
@@ -282,10 +281,10 @@ class TDSConvEncoder(nn.Module):
 
 class TDSLSTMEncoder(nn.Module):
     def __init__(
-            self,
-            num_features: int,
-            lstm_hidden_size: int = 128,
-            num_lstm_layers: int = 4,
+        self,
+        num_features: int,
+        lstm_hidden_size: int = 128,
+        num_lstm_layers: int = 4,
     ) -> None:
         super().__init__()
 
@@ -305,5 +304,4 @@ class TDSLSTMEncoder(nn.Module):
         x, _ = self.lstm_layers(inputs) # (T, N, lstm_hidden_size * 2)
         x = self.fc_block(x) # Apply FC transformation
         x = self.out_layer(x)
-        logging.getLogger(__name__).warning("forward step LSTM run")
         return x
