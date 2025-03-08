@@ -133,7 +133,8 @@ class WindowedEMGDataModule(pl.LightningDataModule):
             shuffle=False,
             num_workers=self.num_workers,
             collate_fn=WindowedEMGDataset.collate,
-            pin_memory=True,
+            # TODO(rokinaka): testing seems to fail if this flag is set
+            pin_memory=False,
             persistent_workers=True,
         )
 
@@ -170,15 +171,10 @@ class TDSConvCTCModule(pl.LightningModule):
             ),
             # (T, N, num_features)
             nn.Flatten(start_dim=2),
-            # TDSConvEncoder(
-            #     num_features=num_features,
-            #     block_channels=block_channels,
-            #     kernel_width=kernel_width,
-            # ),
-            TDSLSTMEncoder(
+            TDSConvEncoder(
                 num_features=num_features,
-                lstm_hidden_size=128,
-                num_lstm_layers=4
+                block_channels=block_channels,
+                kernel_width=kernel_width,
             ),
             # (T, N, num_classes)
             nn.Linear(num_features, charset().num_classes),

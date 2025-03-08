@@ -41,7 +41,6 @@ class CharacterErrorRates(Metric):
         # Use Levenshtein.editops rather than Levenshtein.distance to
         # break down errors into insertions, deletions and substitutions.
         editops = Levenshtein.editops(prediction.text, target.text)
-        logging.getLogger(__name__).warning(f"{prediction.text}/{target.text} => {editops}")
         edits = Counter(op for op, _, _ in editops)
 
         # Update running counts
