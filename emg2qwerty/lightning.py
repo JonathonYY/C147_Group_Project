@@ -25,7 +25,8 @@ from emg2qwerty.modules import (
     MultiBandRotationInvariantMLP,
     SpectrogramNorm,
     TDSConvEncoder,
-    TDSLSTMEncoder
+    TDSLSTMEncoder,
+    CNNRNNHybrid
 )
 from emg2qwerty.transforms import Transform
 

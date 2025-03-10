@@ -344,7 +344,9 @@ class CNNRNNHybrid(nn.Module):
         )
 
         # Fully connected layer for classification
-        self.fc = nn.Linear(rnn_hidden_size * 2, num_classes)  # Bidirectional LSTM
+        # Fully connected block (remains the same)
+        self.fc_block = TDSFullyConnectedBlock(rnn_hidden_size * 2)
+        self.out_layer = nn.Linear(rnn_hidden_size * 2, cnn_features)
 
     def forward(self, inputs: Tensor) -> Tensor:
         """Forward pass for the hybrid CNN + RNN model.
@@ -377,6 +379,8 @@ class CNNRNNHybrid(nn.Module):
         x = x[-1, :, :]  # Shape: (N, rnn_hidden_size * 2)
 
         # Pass through fully connected layer
-        logits = self.fc(x)  # Shape: (N, num_classes)
+        x = self.fc_block(x)  # Apply FC transformation
+        x = self.out_layer(x)
+        logging.getLogger(__name__).warning("forward step LSTM run")
 
-        return logits
+        return x
