@@ -25,7 +25,9 @@ from emg2qwerty.modules import (
     MultiBandRotationInvariantMLP,
     SpectrogramNorm,
     TDSConvEncoder,
-    TDSLSTMEncoder
+    TDSLSTMEncoder,
+    ConvLSTM,
+    ConvLSTMCell
 )
 from emg2qwerty.transforms import Transform
 
@@ -92,8 +94,8 @@ class WindowedEMGDataModule(pl.LightningDataModule):
                     transform=self.test_transform,
                     # Feed the entire session at once without windowing/padding
                     # at test time for more realism
-                    window_length=None,
-                    padding=(0, 0),
+                    window_length=self.window_length,
+                    padding=self.padding, 
                     jitter=False,
                 )
                 for hdf5_path in self.test_sessions
@@ -170,11 +172,18 @@ class TDSConvCTCModule(pl.LightningModule):
             ),
             # (T, N, num_features)
             nn.Flatten(start_dim=2),
-            TDSConvEncoder(
-                num_features=num_features,
-                block_channels=block_channels,
-                kernel_width=kernel_width,
-            ),
+            # TDSConvEncoder(
+            #     num_features=num_features,
+            #     block_channels=block_channels,
+            #     kernel_width=kernel_width,
+            # ),
+            ConvLSTM(input_dim=num_features,
+                 hidden_dim=[64, 64, 128],
+                 kernel_size=(3, 3),
+                 num_layers=3,
+                 batch_first=True
+                 bias=True,
+                 return_all_layers=False),
             # (T, N, num_classes)
             nn.Linear(num_features, charset().num_classes),
             nn.LogSoftmax(dim=-1),
