@@ -338,49 +338,29 @@ class CNNRNNHybrid(nn.Module):
 
         # RNN Encoder (e.g., TDSLSTMEncoder)
         self.rnn_encoder = TDSLSTMEncoder(
-            num_features=cnn_features,
+            num_features=input_channels,
             lstm_hidden_size=rnn_hidden_size,
             num_lstm_layers=num_rnn_layers,
         )
-
-        # Fully connected layer for classification
-        # Fully connected block (remains the same)
-        self.fc_block = TDSFullyConnectedBlock(rnn_hidden_size * 2)
-        self.out_layer = nn.Linear(rnn_hidden_size * 2, cnn_features)
 
     def forward(self, inputs: Tensor) -> Tensor:
         """Forward pass for the hybrid CNN + RNN model.
 
         Args:
-            inputs (Tensor): Input tensor of shape (T, N, C, H, W) where:
-                - T: Sequence length
-                - N: Batch size
-                - C: Input channels
-                - H, W: Spatial dimensions (e.g., height, width)
+            inputs (Tensor): Input tensor of shape (T, N, num_features) where:
 
         Returns:
-            Tensor: Output logits of shape (N, num_classes).
+            Tensor: Output logits of shape (T, N, num_classes).
         """
-        T, N, C, H, W = inputs.shape
+        T, N, num_features = inputs.shape
 
-        # Reshape input for CNN: (T, N, C, H, W) -> (T * N, C, H, W)
-        x = inputs.view(T * N, C, H, W)
-
+        # logging.getLogger(__name__).warning(inputs.shape)
         # Pass through CNN encoder
-        x = self.cnn_encoder(x)  # Output shape: (T * N, cnn_features)
-
-        # Reshape back to sequence: (T * N, cnn_features) -> (T, N, cnn_features)
-        x = x.view(T, N, -1)
+        x = self.cnn_encoder(inputs)  # Output shape: (T * N, cnn_features)
+        # logging.getLogger(__name__).warning(x.shape)
 
         # Pass through RNN encoder
         x = self.rnn_encoder(x)  # Output shape: (T, N, rnn_hidden_size * 2)
-
-        # Take the last time step's output for classification
-        x = x[-1, :, :]  # Shape: (N, rnn_hidden_size * 2)
-
-        # Pass through fully connected layer
-        x = self.fc_block(x)  # Apply FC transformation
-        x = self.out_layer(x)
-        logging.getLogger(__name__).warning("forward step LSTM run")
+        # logging.getLogger(__name__).warning(x.shape)
 
         return x
