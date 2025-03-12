@@ -170,7 +170,7 @@ class TDSConvCTCModule(pl.LightningModule):
                 mlp_features=mlp_features,
                 num_bands=self.NUM_BANDS,
             ),
-            nn.Dropout(p=0.3),
+            # nn.Dropout(p=0.3),
             # (T, N, num_features)
             nn.Flatten(start_dim=2),
             TDSGRUEncoder(
