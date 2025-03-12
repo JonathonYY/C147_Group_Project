@@ -390,7 +390,7 @@ class CNNGRUHybrid(nn.Module):
     ) -> None:
         super().__init__()
 
-        # CNN Encoder (e.g., TDSConvEncoder)
+        # CNN Encoder 
         self.cnn_encoder = TDSConvEncoder(
             num_features=input_channels,
             block_channels=[cnn_features] * 4,  # Example: 4 CNN blocks
@@ -406,7 +406,7 @@ class CNNGRUHybrid(nn.Module):
             bidirectional=True,
         )
 
-        # Fully connected block (remains the same)
+        # Fully connected block
         self.fc_block = TDSFullyConnectedBlock(gru_hidden_size * 2)
         self.out_layer = nn.Linear(gru_hidden_size * 2, num_classes)
 
@@ -422,15 +422,15 @@ class CNNGRUHybrid(nn.Module):
         T, N, num_features = inputs.shape
 
         # Pass through CNN encoder
-        x = self.cnn_encoder(inputs)  # Output shape: (T, N, cnn_features)
+        x = self.cnn_encoder(inputs) 
 
         # Pass through GRU encoder
-        x, _ = self.gru_encoder(x)  # Output shape: (T, N, gru_hidden_size * 2)
+        x, _ = self.gru_encoder(x)
 
         # Apply fully connected block
-        x = self.fc_block(x)  # Output shape: (T, N, gru_hidden_size * 2)
+        x = self.fc_block(x)
 
         # Final output layer
-        x = self.out_layer(x)  # Output shape: (T, N, num_classes)
+        x = self.out_layer(x)
 
         return x
