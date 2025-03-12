@@ -153,6 +153,29 @@ class TemporalAlignmentJitter:
 
         return torch.stack([left, right], dim=self.stack_dim)
 
+@dataclass
+class Resample:
+    """
+    Resamples input data to a lower freqency
+
+    Args:
+        orig_freq (int): Original sample rate
+        new_freq (int): New sample rate
+    """
+    orig_freq: int = 2000
+    new_freq: int = 1000
+
+    def __post_init__(self) -> None:
+        # Create the resample transform using torchaudio
+        self.resample_transform = torchaudio.transforms.Resample(
+            orig_freq=self.orig_freq,
+            new_freq=self.new_freq
+        )
+
+    def __call__(self, tensor: torch.Tensor) -> torch.Tensor:
+        x = tensor.movedim(0, -1)  # (T, ..., C) -> (..., C, T)
+        resampled_tensor = self.resample_transform(x)
+        return resampled_tensor.movedim(-1, 0)  # (C, T) -> (T, ..., C)
 
 @dataclass
 class LogSpectrogram:

@@ -1,0 +1,61 @@
+All models trained for 40 epochs; testing on base TDSConvEncoder
+125 Hz STFT Windowing: Training in 39 minutes, 15.306 seconds.
+{'val_metrics': [{'val/loss': 1.013124704360962,
+                  'val/CER': 31.280460357666016,
+                  'val/IER': 13.668586730957031,
+                  'val/DER': 1.5064244270324707,
+                  'val/SER': 16.105449676513672}],
+ 'test_metrics': [{'test/loss': 0.9957551956176758,
+                   'test/CER': 32.20228958129883,
+                   'test/IER': 10.827750205993652,
+                   'test/DER': 1.5560837984085083,
+                   'test/SER': 19.818456649780273}]}
+
+100 Hz STFT Windowing: Training in 24 minutes and 8.273 seconds
+{'val_metrics': [{'val/loss': 1.1472772359848022,
+                  'val/CER': 30.10633659362793,
+                  'val/IER': 14.93132495880127,
+                  'val/DER': 1.151971697807312,
+                  'val/SER': 14.023039817810059}],
+ 'test_metrics': [{'test/loss': 0.885729968547821,
+                   'test/CER': 26.64793586730957,
+                   'test/IER': 7.845256328582764,
+                   'test/DER': 1.9667171239852905,
+                   'test/SER': 16.835962295532227}]}
+
+80 Hz STFT Windowing: Training in 19 minutes and 3.666 seconds
+{'val_metrics': [{'val/loss': 1.6046420335769653,
+                  'val/CER': 42.645103454589844,
+                  'val/IER': 29.109437942504883,
+                  'val/DER': 0.4209127128124237,
+                  'val/SER': 13.114753723144531}],
+ 'test_metrics': [{'test/loss': 1.1069713830947876,
+                   'test/CER': 31.100065231323242,
+                   'test/IER': 13.03220272064209,
+                   'test/DER': 1.469634771347046,
+                   'test/SER': 16.598228454589844}]}
+
+200 Hz STFT Windowing: Training in 50 minutes, 42.516 seconds
+{'val_metrics': [{'val/loss': 1.5278397798538208,
+                  'val/CER': 58.63978576660156,
+                  'val/IER': 43.15462875366211,
+                  'val/DER': 0.7975188493728638,
+                  'val/SER': 14.687638282775879}],
+ 'test_metrics': [{'test/loss': 1.362365484237671,
+                   'test/CER': 55.651611328125,
+                   'test/IER': 42.27361297607422,
+                   'test/DER': 0.10806138068437576,
+                   'test/SER': 13.269937515258789}]}
+
+100 Hz STFT Windowing with resampling 2000 Hz -> 1000 Hz: 
+{'val_metrics': [{'val/loss': 1.1376930475234985,
+                  'val/CER': 31.12538719177246,
+                  'val/IER': 16.105449676513672,
+                  'val/DER': 1.373504638671875,
+                  'val/SER': 13.646432876586914}],
+ 'test_metrics': [{'test/loss': 0.9452252388000488,
+                   'test/CER': 27.901447296142578,
+                   'test/IER': 8.752971649169922,
+                   'test/DER': 2.269289016723633,
+                   'test/SER': 16.879186630249023}]}
+
