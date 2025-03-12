@@ -26,7 +26,8 @@ from emg2qwerty.modules import (
     SpectrogramNorm,
     TDSConvEncoder,
     TDSLSTMEncoder,
-    CNNRNNHybrid
+    CNNRNNHybrid,
+    CNNGRUHybrid
 )
 from emg2qwerty.transforms import Transform
 
@@ -172,11 +173,11 @@ class TDSConvCTCModule(pl.LightningModule):
             # (T, N, num_features)
             nn.Flatten(start_dim=2),
             # Replace TDSConvEncoder or TDSLSTMEncoder with CNNRNNHybrid
-            CNNRNNHybrid(
+            CNNGRUHybrid(
                 input_channels=num_features,  # Input to CNN
                 cnn_features=64,  # Output features from CNN
-                rnn_hidden_size=128,  # Hidden size of RNN
-                num_rnn_layers=2,  # Number of RNN layers
+                gru_hidden_size=128,  # Hidden size of GRU
+                num_gru_layers=2,  # Number of GRU layers
                 num_classes=charset().num_classes,  # Output classes
             ),
             # (T, N, num_classes)
@@ -209,7 +210,8 @@ class TDSConvCTCModule(pl.LightningModule):
         input_lengths = batch["input_lengths"]
         target_lengths = batch["target_lengths"]
         N = len(input_lengths)  # batch_size
-
+        print(f"Batch size (N): {N}")
+        print(f"Input lengths: {input_lengths}")
         emissions = self.forward(inputs)
 
         # Shrink input lengths by an amount equivalent to the conv encoder's

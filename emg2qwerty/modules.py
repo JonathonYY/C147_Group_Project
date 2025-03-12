@@ -292,7 +292,7 @@ class TDSLSTMEncoder(nn.Module):
             input_size=num_features,
             hidden_size=lstm_hidden_size,
             num_layers=num_lstm_layers,
-            batch_first=False,  # Input shape: (T, N, num_features)
+            batch_first=True,  # Input shape: (batch_size, sequence_length, num_features)
             bidirectional=True,
         )
 
@@ -301,21 +301,82 @@ class TDSLSTMEncoder(nn.Module):
         self.out_layer = nn.Linear(lstm_hidden_size * 2, num_features)
 
     def forward(self, inputs: torch.Tensor) -> torch.Tensor:
-        x, _ = self.lstm_layers(inputs)  # (T, N, lstm_hidden_size * 2)
-        x = self.fc_block(x)  # Apply FC transformation
+        # Forward pass through the LSTM
+        x, _ = self.lstm_layers(inputs)  # (batch_size, seq_len, lstm_hidden_size * 2)
+        
+        # Apply FC transformation
+        x = self.fc_block(x)  
         x = self.out_layer(x)
+        
         logging.getLogger(__name__).warning("forward step LSTM run")
         return x
 
-
 class CNNRNNHybrid(nn.Module):
-    """A hybrid model combining CNN and RNN for sequential data with spatial structure.
+    def __init__(
+        self,
+        input_channels: int,  # Change back to input_channels for compatibility
+        cnn_features: int,
+        rnn_hidden_size: int,
+        num_rnn_layers: int,
+        num_classes: int,
+    ) -> None:
+        super().__init__()
+
+        # Treat input_channels as feature size since there's no spatial structure
+        input_features = input_channels  
+
+        # CNN Encoder (1D Convolution for sequential data)
+        self.cnn_encoder = nn.Conv1d(
+            in_channels=input_features, out_channels=cnn_features, kernel_size=3, padding=1
+        )
+
+        # RNN Encoder
+        self.rnn_encoder = nn.LSTM(
+            input_size=cnn_features,
+            hidden_size=rnn_hidden_size,
+            num_layers=num_rnn_layers,
+            batch_first=True,  # Input shape: (batch_size, sequence_length, features)
+            bidirectional=True,
+        )
+
+        # Fully connected layers
+        self.fc_block = TDSFullyConnectedBlock(rnn_hidden_size * 2)
+        self.out_layer = nn.Linear(rnn_hidden_size * 2, num_classes)
+
+    def forward(self, inputs: Tensor) -> Tensor:
+        batch_size, seq_len, features = inputs.shape  # (batch_size, sequence_length, features)
+
+        # CNN expects (batch_size, features, sequence_length)
+        x = inputs.permute(0, 2, 1)
+
+        # CNN Encoder
+        x = self.cnn_encoder(x)
+
+        # Reshape for RNN: (batch_size, cnn_features, sequence_length) → (batch_size, sequence_length, cnn_features)
+        x = x.permute(0, 2, 1)
+
+        # RNN Encoder
+        x, _ = self.rnn_encoder(x)
+
+        # Take last time step (or use other strategy for RNN output)
+        x = x[:, -1, :]  # (batch_size, rnn_hidden_size * 2)
+
+        # Fully connected layers
+        x = self.fc_block(x)
+        x = self.out_layer(x)
+
+        logging.getLogger(__name__).warning("forward step LSTM run")
+
+        return x
+
+class CNNGRUHybrid(nn.Module):
+    """A hybrid model combining CNN and GRU for sequential data with spatial structure.
 
     Args:
         input_channels (int): Number of input channels (e.g., for spectrograms or images).
         cnn_features (int): Number of output features from the CNN encoder.
-        rnn_hidden_size (int): Hidden size of the RNN.
-        num_rnn_layers (int): Number of RNN layers.
+        gru_hidden_size (int): Hidden size of the GRU.
+        num_gru_layers (int): Number of GRU layers.
         num_classes (int): Number of output classes for classification.
     """
 
@@ -323,8 +384,8 @@ class CNNRNNHybrid(nn.Module):
         self,
         input_channels: int,
         cnn_features: int,
-        rnn_hidden_size: int,
-        num_rnn_layers: int,
+        gru_hidden_size: int,
+        num_gru_layers: int,
         num_classes: int,
     ) -> None:
         super().__init__()
@@ -336,51 +397,40 @@ class CNNRNNHybrid(nn.Module):
             kernel_width=3,  # Example kernel width
         )
 
-        # RNN Encoder (e.g., TDSLSTMEncoder)
-        self.rnn_encoder = TDSLSTMEncoder(
-            num_features=cnn_features,
-            lstm_hidden_size=rnn_hidden_size,
-            num_lstm_layers=num_rnn_layers,
+        # GRU Encoder
+        self.gru_encoder = nn.GRU(
+            input_size=input_channels,
+            hidden_size=gru_hidden_size,
+            num_layers=num_gru_layers,
+            batch_first=False,  # Input shape: (T, N, num_features)
+            bidirectional=True,
         )
 
-        # Fully connected layer for classification
         # Fully connected block (remains the same)
-        self.fc_block = TDSFullyConnectedBlock(rnn_hidden_size * 2)
-        self.out_layer = nn.Linear(rnn_hidden_size * 2, cnn_features)
+        self.fc_block = TDSFullyConnectedBlock(gru_hidden_size * 2)
+        self.out_layer = nn.Linear(gru_hidden_size * 2, num_classes)
 
     def forward(self, inputs: Tensor) -> Tensor:
-        """Forward pass for the hybrid CNN + RNN model.
+        """Forward pass for the hybrid CNN + GRU model.
 
         Args:
-            inputs (Tensor): Input tensor of shape (T, N, C, H, W) where:
-                - T: Sequence length
-                - N: Batch size
-                - C: Input channels
-                - H, W: Spatial dimensions (e.g., height, width)
+            inputs (Tensor): Input tensor of shape (T, N, num_features).
 
         Returns:
-            Tensor: Output logits of shape (N, num_classes).
+            Tensor: Output logits of shape (T, N, num_classes).
         """
-        T, N, C, H, W = inputs.shape
-
-        # Reshape input for CNN: (T, N, C, H, W) -> (T * N, C, H, W)
-        x = inputs.view(T * N, C, H, W)
+        T, N, num_features = inputs.shape
 
         # Pass through CNN encoder
-        x = self.cnn_encoder(x)  # Output shape: (T * N, cnn_features)
+        x = self.cnn_encoder(inputs)  # Output shape: (T, N, cnn_features)
 
-        # Reshape back to sequence: (T * N, cnn_features) -> (T, N, cnn_features)
-        x = x.view(T, N, -1)
+        # Pass through GRU encoder
+        x, _ = self.gru_encoder(x)  # Output shape: (T, N, gru_hidden_size * 2)
 
-        # Pass through RNN encoder
-        x = self.rnn_encoder(x)  # Output shape: (T, N, rnn_hidden_size * 2)
+        # Apply fully connected block
+        x = self.fc_block(x)  # Output shape: (T, N, gru_hidden_size * 2)
 
-        # Take the last time step's output for classification
-        x = x[-1, :, :]  # Shape: (N, rnn_hidden_size * 2)
-
-        # Pass through fully connected layer
-        x = self.fc_block(x)  # Apply FC transformation
-        x = self.out_layer(x)
-        logging.getLogger(__name__).warning("forward step LSTM run")
+        # Final output layer
+        x = self.out_layer(x)  # Output shape: (T, N, num_classes)
 
         return x
