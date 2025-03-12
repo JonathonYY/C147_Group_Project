@@ -5,8 +5,10 @@
 # LICENSE file in the root directory of this source tree.
 
 from collections.abc import Sequence
+import logging
 
 import torch
+import numpy as np
 from torch import nn
 
 
@@ -305,3 +307,30 @@ class TDSLSTMEncoder(nn.Module):
         x = self.fc_block(x) # Apply FC transformation
         x = self.out_layer(x)
         return x
+
+class TransformerEncoder(nn.Module):
+    def __init__(
+            self,
+            num_features: int,
+            num_heads: int,
+            num_layers: int,
+            dim_feedforward: int,
+            dropout: float
+    ) -> None:
+        super().__init__()
+
+        self.encoder_layer = nn.TransformerEncoderLayer(
+            d_model=num_features,
+            nhead=num_heads,
+            dim_feedforward=dim_feedforward,
+            dropout=dropout
+        )
+
+        self.transformer_encoder = nn.TransformerEncoder(
+            self.encoder_layer,
+            num_layers=num_layers
+        )
+
+    def forward(self, inputs: torch.Tensor) -> torch.Tensor:
+        # input shape (T, N, num_features)
+        return self.transformer_encoder(inputs)
