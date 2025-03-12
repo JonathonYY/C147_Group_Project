@@ -47,7 +47,7 @@ All models trained for 40 epochs; testing on base TDSConvEncoder
                    'test/DER': 0.10806138068437576,
                    'test/SER': 13.269937515258789}]}
 
-100 Hz STFT Windowing with resampling 2000 Hz -> 1000 Hz: 
+100 Hz STFT Windowing with resampling 2000 Hz -> 1000 Hz:
 {'val_metrics': [{'val/loss': 1.1376930475234985,
                   'val/CER': 31.12538719177246,
                   'val/IER': 16.105449676513672,
@@ -59,3 +59,14 @@ All models trained for 40 epochs; testing on base TDSConvEncoder
                    'test/DER': 2.269289016723633,
                    'test/SER': 16.879186630249023}]}
 
+100 Hz STFT Windowing with resampling 2000 Hz -> 500 Hz:
+{'val_metrics': [{'val/loss': 1.2717798948287964,
+                  'val/CER': 33.65086364746094,
+                  'val/IER': 18.143552780151367,
+                  'val/DER': 0.9747452139854431,
+                  'val/SER': 14.532565116882324}],
+ 'test_metrics': [{'test/loss': 0.9996030926704407,
+                   'test/CER': 29.26302146911621,
+                   'test/IER': 9.920034408569336,
+                   'test/DER': 1.6857575178146362,
+                   'test/SER': 17.657228469848633}]}
