@@ -248,9 +248,14 @@ class SpecAugment:
 @dataclass
 class SpuriousFailure:
     failure_probability: float = 0.0
+    should_renormalize: bool = True
 
     def __call__(self, data: torch.Tensor) -> torch.Tensor:
         fail_mask = np.random.random_sample(data.shape)
         data[fail_mask < self.failure_probability] = 0.0
+
+        if self.should_renormalize and self.failure_probability > 0.0:
+            # Normalize the remaining data to preserve statistics
+            data[fail_mask >= self.failure_probability] /= (1. - self.failure_probability)
 
         return data
