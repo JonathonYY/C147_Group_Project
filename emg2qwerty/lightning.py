@@ -161,7 +161,6 @@ class TDSConvCTCModule(pl.LightningModule):
         # Model
         # inputs: (T, N, bands=2, electrode_channels=16, freq)
         self.model = nn.Sequential(
-            # nn.Dropout(p=0.3),
             # (T, N, bands=2, C=16, freq)
             SpectrogramNorm(channels=self.NUM_BANDS * self.ELECTRODE_CHANNELS),
             # (T, N, bands=2, mlp_features[-1])
@@ -170,7 +169,6 @@ class TDSConvCTCModule(pl.LightningModule):
                 mlp_features=mlp_features,
                 num_bands=self.NUM_BANDS,
             ),
-            # nn.Dropout(p=0.3),
             # (T, N, num_features)
             nn.Flatten(start_dim=2),
             TDSGRUEncoder(

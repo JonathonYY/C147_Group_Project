@@ -250,12 +250,7 @@ class SpuriousFailure:
     failure_probability: float = 0.0
 
     def __call__(self, data: torch.Tensor) -> torch.Tensor:
-        channels = np.array(range(16))
-
-        for time in range(data.shape[0]):
-            for band in range(data.shape[1]):
-                fail_mask = channels[np.random.random_sample() < self.failure_probability]
-
-                data[time, band, fail_mask] = 0.0
+        fail_mask = np.random.random_sample(data.shape)
+        data[fail_mask < self.failure_probability] = 0.0
 
         return data
