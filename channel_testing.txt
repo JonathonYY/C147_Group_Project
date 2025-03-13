@@ -40,6 +40,7 @@ All channels:
                    'test/DER': 1.7722066640853882,
                    'test/SER': 18.65139389038086}]}
 
+Good 8 channel model (drop less important channels)
 8 channel model (drop 7, 10, 0, 15, 6, 11, 9, 1)
 {'val_metrics': [{'val/loss': 1.1935240030288696,
                   'val/CER': 33.20779800415039,
@@ -51,6 +52,19 @@ All channels:
                    'test/IER': 11.476118087768555,
                    'test/DER': 1.5993083715438843,
                    'test/SER': 18.30559730529785}]}
+
+Bad 8 channel model (drop more important channels)
+8 channel model (drop 8, 14, 5, 12, 2, 3, 4, 13)
+{'val_metrics': [{'val/loss': 1.5012428760528564,
+                  'val/CER': 50.044307708740234,
+                  'val/IER': 39.5657958984375,
+                  'val/DER': 0.19937971234321594,
+                  'val/SER': 10.279131889343262}],
+ 'test_metrics': [{'test/loss': 1.3584423065185547,
+                   'test/CER': 50.6807861328125,
+                   'test/IER': 38.83726119995117,
+                   'test/DER': 0.23773503303527832,
+                   'test/SER': 11.605792045593262}]}
 
 Mask channel 0:
 {'val_metrics': [{'val/loss': 4.111710548400879,
