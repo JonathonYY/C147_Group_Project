@@ -5,8 +5,8 @@
 # LICENSE file in the root directory of this source tree.
 
 from collections.abc import Callable, Sequence
-from dataclasses import dataclass
-from typing import Any, TypeVar
+from dataclasses import dataclass, field
+from typing import Any, List, TypeVar
 
 import numpy as np
 import torch
@@ -176,6 +176,32 @@ class Resample:
         x = tensor.movedim(0, -1)  # (T, ..., C) -> (..., C, T)
         resampled_tensor = self.resample_transform(x)
         return resampled_tensor.movedim(-1, 0)  # (C, T) -> (T, ..., C)
+
+@dataclass
+class DropChannels:
+    """Drops specified channels from input tensor
+
+    Args:
+        drop_channels (list[int]): list of channel indices to drop from input
+    """
+    drop_channels: List[int] = field(default_factory=list)
+
+    def __call__(self, tensor: torch.Tensor) -> torch.Tensor:
+        retain_channels = [i for i in range(16) if i not in self.drop_channels]
+        return tensor[..., retain_channels]
+
+@dataclass
+class ChannelMask:
+    """Zeroes out specified
+
+    Args:
+        mask_channels (list[int]): list of channel indices to zero out
+    """
+    mask_channels: List[int] = field(default_factory=list)
+
+    def __call__(self, tensor:torch.Tensor) -> torch.Tensor:
+        tensor[..., self.mask_channels] = 0
+        return tensor
 
 @dataclass
 class LogSpectrogram:

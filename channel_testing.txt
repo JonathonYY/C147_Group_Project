@@ -1,0 +1,210 @@
+Testing on base TDSConvEncoder trained for 40 epochs
+STFT windowing at 100 Hz, no downsampling of inputs
+
+Summary:
+Least impactful channels:
+ - 7, 10, 0, 15, 6
+
+All channels:
+{'val_metrics': [{'val/loss': 1.1472772359848022,
+                  'val/CER': 30.10633659362793,
+                  'val/IER': 14.93132495880127,
+                  'val/DER': 1.151971697807312,
+                  'val/SER': 14.023039817810059}],
+ 'test_metrics': [{'test/loss': 0.885729968547821,
+                   'test/CER': 26.64793586730957,
+                   'test/IER': 7.845256328582764,
+                   'test/DER': 1.9667171239852905,
+                   'test/SER': 16.835962295532227}]}
+
+Mask channel 0:
+{'val_metrics': [{'val/loss': 4.111710548400879,
+                  'val/CER': 86.44217681884766,
+                  'val/IER': 78.04608154296875,
+                  'val/DER': 0.0,
+                  'val/SER': 8.396100997924805}],
+ 'test_metrics': [{'test/loss': 4.235462188720703,
+                   'test/CER': 85.17398071289062,
+                   'test/IER': 78.77674865722656,
+                   'test/DER': 0.0,
+                   'test/SER': 6.397233486175537}]}
+
+Mask channel 1:
+{'val_metrics': [{'val/loss': 5.485556602478027,
+                  'val/CER': 95.36995697021484,
+                  'val/IER': 93.92999267578125,
+                  'val/DER': 0.0,
+                  'val/SER': 1.4399645328521729}],
+ 'test_metrics': [{'test/loss': 5.557539939880371,
+                   'test/CER': 95.0940170288086,
+                   'test/IER': 95.0940170288086,
+                   'test/DER': 0.0,
+                   'test/SER': 0.0}]}
+
+Mask channel 2:
+{'val_metrics': [{'val/loss': 6.856623649597168,
+                  'val/CER': 99.97784423828125,
+                  'val/IER': 99.97784423828125,
+                  'val/DER': 0.0,
+                  'val/SER': 0.0}],
+ 'test_metrics': [{'test/loss': 6.987182140350342,
+                   'test/CER': 99.97838592529297,
+                   'test/IER': 99.97838592529297,
+                   'test/DER': 0.0,
+                   'test/SER': 0.0}]}
+
+Mask channel 3:
+{'val_metrics': [{'val/loss': 6.579247951507568,
+                  'val/CER': 99.97784423828125,
+                  'val/IER': 99.97784423828125,
+                  'val/DER': 0.0,
+                  'val/SER': 0.0}],
+ 'test_metrics': [{'test/loss': 6.7396559715271,
+                   'test/CER': 99.97838592529297,
+                   'test/IER': 99.97838592529297,
+                   'test/DER': 0.0,
+                   'test/SER': 0.0}]}
+
+Mask channel 4:
+{'val_metrics': [{'val/loss': 6.545727252960205,
+                  'val/CER': 100.0,
+                  'val/IER': 100.0,
+                  'val/DER': 0.0,
+                  'val/SER': 0.0}],
+ 'test_metrics': [{'test/loss': 6.612510681152344,
+                   'test/CER': 99.76226806640625,
+                   'test/IER': 99.76226806640625,
+                   'test/DER': 0.0,
+                   'test/SER': 0.0}]}
+
+Mask channel 5:
+{'val_metrics': [{'val/loss': 5.469542980194092,
+                  'val/CER': 99.09171295166016,
+                  'val/IER': 99.04740905761719,
+                  'val/DER': 0.0,
+                  'val/SER': 0.04430660232901573}],
+ 'test_metrics': [{'test/loss': 5.682942867279053,
+                   'test/CER': 97.42813873291016,
+                   'test/IER': 97.40652465820312,
+                   'test/DER': 0.0,
+                   'test/SER': 0.021612275391817093}]}
+
+Mask channel 6:
+{'val_metrics': [{'val/loss': 4.042928218841553,
+                  'val/CER': 90.27470397949219,
+                  'val/IER': 86.04341888427734,
+                  'val/DER': 0.0,
+                  'val/SER': 4.231280326843262}],
+ 'test_metrics': [{'test/loss': 4.504069805145264,
+                   'test/CER': 89.28031158447266,
+                   'test/IER': 86.7948989868164,
+                   'test/DER': 0.0,
+                   'test/SER': 2.4854116439819336}]}
+
+Mask channel 7:
+{'val_metrics': [{'val/loss': 2.686753273010254,
+                  'val/CER': 72.81790161132812,
+                  'val/IER': 63.02614212036133,
+                  'val/DER': 0.0,
+                  'val/SER': 9.79175853729248}],
+ 'test_metrics': [{'test/loss': 3.2630605697631836,
+                   'test/CER': 79.46833801269531,
+                   'test/IER': 72.55240631103516,
+                   'test/DER': 0.0,
+                   'test/SER': 6.915928363800049}]}
+
+Mask channel 8:
+{'val_metrics': [{'val/loss': 6.547554969787598,
+                  'val/CER': 97.6074447631836,
+                  'val/IER': 97.47452545166016,
+                  'val/DER': 0.0,
+                  'val/SER': 0.1329198032617569}],
+ 'test_metrics': [{'test/loss': 6.178183078765869,
+                   'test/CER': 97.53620147705078,
+                   'test/IER': 97.53620147705078,
+                   'test/DER': 0.0,
+                   'test/SER': 0.0}]}
+
+Mask channel 9:
+{'val_metrics': [{'val/loss': 5.903115272521973,
+                  'val/CER': 93.19893646240234,
+                  'val/IER': 91.02791595458984,
+                  'val/DER': 0.0,
+                  'val/SER': 2.171023368835449}],
+ 'test_metrics': [{'test/loss': 5.7024736404418945,
+                   'test/CER': 92.65182495117188,
+                   'test/IER': 92.2195816040039,
+                   'test/DER': 0.0,
+                   'test/SER': 0.43224552273750305}]}
+
+Mask channel 10:
+{'val_metrics': [{'val/loss': 4.850225448608398,
+                  'val/CER': 84.73637390136719,
+                  'val/IER': 74.59016418457031,
+                  'val/DER': 0.0,
+                  'val/SER': 10.146211624145508}],
+ 'test_metrics': [{'test/loss': 4.892757892608643,
+                   'test/CER': 84.78495788574219,
+                   'test/IER': 79.03609466552734,
+                   'test/DER': 0.0,
+                   'test/SER': 5.748865127563477}]}
+
+Mask channel 11:
+{'val_metrics': [{'val/loss': 5.479213714599609,
+                  'val/CER': 92.97740173339844,
+                  'val/IER': 89.36641693115234,
+                  'val/DER': 0.0,
+                  'val/SER': 3.610988140106201}],
+ 'test_metrics': [{'test/loss': 5.361917495727539,
+                   'test/CER': 90.51221466064453,
+                   'test/IER': 88.71839141845703,
+                   'test/DER': 0.0,
+                   'test/SER': 1.7938188314437866}]}
+
+Mask channel 12:
+{'val_metrics': [{'val/loss': 7.336607933044434,
+                  'val/CER': 99.84492492675781,
+                  'val/IER': 99.80062103271484,
+                  'val/DER': 0.0,
+                  'val/SER': 0.04430660232901573}],
+ 'test_metrics': [{'test/loss': 6.958125114440918,
+                   'test/CER': 99.09228515625,
+                   'test/IER': 99.09228515625,
+                   'test/DER': 0.0,
+                   'test/SER': 0.0}]}
+
+Mask channel 13:
+{'val_metrics': [{'val/loss': 8.255122184753418,
+                  'val/CER': 100.0,
+                  'val/IER': 100.0,
+                  'val/DER': 0.0,
+                  'val/SER': 0.0}],
+ 'test_metrics': [{'test/loss': 7.958104133605957,
+                   'test/CER': 100.0,
+                   'test/IER': 100.0,
+                   'test/DER': 0.0,
+                   'test/SER': 0.0}]}
+
+Mask channel 14:
+{'val_metrics': [{'val/loss': 5.812854290008545,
+                  'val/CER': 98.22773742675781,
+                  'val/IER': 97.78466796875,
+                  'val/DER': 0.0,
+                  'val/SER': 0.4430660307407379}],
+ 'test_metrics': [{'test/loss': 5.754912376403809,
+                   'test/CER': 97.08234405517578,
+                   'test/IER': 97.08234405517578,
+                   'test/DER': 0.0,
+                   'test/SER': 0.0}]}
+
+Mask channel 15:
+{'val_metrics': [{'val/loss': 4.2283453941345215,
+                  'val/CER': 87.904296875,
+                  'val/IER': 79.04297637939453,
+                  'val/DER': 0.0,
+                  'val/SER': 8.861320495605469}],
+ 'test_metrics': [{'test/loss': 4.38670539855957,
+                   'test/CER': 86.9677963256836,
+                   'test/IER': 80.89474487304688,
+                   'test/DER': 0.0,
+                   'test/SER': 6.073049545288086}]}

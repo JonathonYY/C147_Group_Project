@@ -18,10 +18,18 @@ resample:
   orig_freq: 2000 # 2000 Hz
   new_freq: 1000 # 1000 Hz
 
+drop_channels: # if used, be sure to update ELECTRODE_CHANNELS in lightning.py
+  _target_: emg2qwerty.transforms.DropChannels
+  drop_channels: []
+
+mask_channels:
+  _target_: emg2qwerty.transforms.ChannelMask
+  mask_channels: [15]
+
 logspec:
   _target_: emg2qwerty.transforms.LogSpectrogram
   n_fft: 64
-  hop_length: 10  # Downsamples from 1kHz to 100Hz
+  hop_length: 20  # Downsamples from 2kHz to 100Hz
 
 specaug:
   _target_: emg2qwerty.transforms.SpecAugment
@@ -35,13 +43,16 @@ transforms:
     - ${to_tensor}
     - ${band_rotation}
     - ${temporal_jitter}
-    - ${resample}
+    # - ${resample}
+    # - ${drop_channels}
     - ${logspec}
     - ${specaug}
 
   val:
     - ${to_tensor}
-    - ${resample}
+    # - ${resample}
+    # - ${drop_channels}
+    # - ${mask_channels}
     - ${logspec}
 
   test: ${transforms.val}
