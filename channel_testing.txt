@@ -2,8 +2,19 @@ Testing on base TDSConvEncoder trained for 40 epochs
 STFT windowing at 100 Hz, no downsampling of inputs
 
 Summary:
-Least impactful channels:
- - 7, 10, 0, 15, 6
+7 < 10 < 0 < 15 < 6 < 11 < 9 < 1 < 8 < 14 < 5 < 12 < [2, 3, 4, 13]
+
+Baseline model (125 Hz STFT windowing)
+{'val_metrics': [{'val/loss': 1.013124704360962,
+                  'val/CER': 31.280460357666016,
+                  'val/IER': 13.668586730957031,
+                  'val/DER': 1.5064244270324707,
+                  'val/SER': 16.105449676513672}],
+ 'test_metrics': [{'test/loss': 0.9957551956176758,
+                   'test/CER': 32.20228958129883,
+                   'test/IER': 10.827750205993652,
+                   'test/DER': 1.5560837984085083,
+                   'test/SER': 19.818456649780273}]}
 
 All channels:
 {'val_metrics': [{'val/loss': 1.1472772359848022,
@@ -17,7 +28,7 @@ All channels:
                    'test/DER': 1.9667171239852905,
                    'test/SER': 16.835962295532227}]}
 
-12 channel model (drop 0, 7, 10, 15)
+12 channel model (drop 7, 10, 0, 15)
 {'val_metrics': [{'val/loss': 1.1838796138763428,
                   'val/CER': 32.609657287597656,
                   'val/IER': 15.861763000488281,
@@ -28,6 +39,19 @@ All channels:
                    'test/IER': 8.255888938903809,
                    'test/DER': 1.7722066640853882,
                    'test/SER': 18.65139389038086}]}
+
+8 channel model (drop 7, 10, 0, 15, 6, 11, 9, 1)
+{'val_metrics': [{'val/loss': 1.1935240030288696,
+                  'val/CER': 33.20779800415039,
+                  'val/IER': 18.05493927001953,
+                  'val/DER': 0.9304386377334595,
+                  'val/SER': 14.222418785095215}],
+ 'test_metrics': [{'test/loss': 1.0242993831634521,
+                   'test/CER': 31.381025314331055,
+                   'test/IER': 11.476118087768555,
+                   'test/DER': 1.5993083715438843,
+                   'test/SER': 18.30559730529785}]}
+
 Mask channel 0:
 {'val_metrics': [{'val/loss': 4.111710548400879,
                   'val/CER': 86.44217681884766,
