@@ -27,8 +27,8 @@ specaug:
 
 spurious_failure:
   _target_: emg2qwerty.transforms.SpuriousFailure
-  failure_probability: 0.3
-  should_renormalize: True
+  failure_probability: 0.1
+  should_renormalize: False
 
 transforms:
   train:
