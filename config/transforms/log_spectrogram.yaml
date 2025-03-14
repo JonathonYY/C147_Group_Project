@@ -13,10 +13,25 @@ temporal_jitter:
   _target_: emg2qwerty.transforms.TemporalAlignmentJitter
   max_offset: 120  # Max 60ms jitter for 2kHz EMG
 
+resample:
+  _target_: emg2qwerty.transforms.Resample
+  orig_freq: 2000 # 2000 Hz
+  new_freq: 1000 # 1000 Hz
+
+# if used, be sure to update ELECTRODE_CHANNELS in lightning.py and
+# in_features in tds_conv_ctc.yaml
+drop_channels:
+  _target_: emg2qwerty.transforms.DropChannels
+  drop_channels: [8, 14, 5, 12, 2, 3, 4, 13]
+
+mask_channels:
+  _target_: emg2qwerty.transforms.ChannelMask
+  mask_channels: [15]
+
 logspec:
   _target_: emg2qwerty.transforms.LogSpectrogram
   n_fft: 64
-  hop_length: 16  # Downsamples from 2kHz to 125Hz
+  hop_length: 20  # Downsamples from 2kHz to 100Hz
 
 specaug:
   _target_: emg2qwerty.transforms.SpecAugment
@@ -28,13 +43,18 @@ specaug:
 transforms:
   train:
     - ${to_tensor}
+    - ${drop_channels}
     - ${band_rotation}
     - ${temporal_jitter}
+    # - ${resample}
     - ${logspec}
     - ${specaug}
 
   val:
     - ${to_tensor}
+    # - ${resample}
+    - ${drop_channels}
+    # - ${mask_channels}
     - ${logspec}
 
   test: ${transforms.val}
