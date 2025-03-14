@@ -43,7 +43,7 @@ specaug:
 transforms:
   train:
     - ${to_tensor}
-    - ${drop_channels}
+    # - ${drop_channels}
     - ${band_rotation}
     - ${temporal_jitter}
     # - ${resample}
@@ -53,7 +53,7 @@ transforms:
   val:
     - ${to_tensor}
     # - ${resample}
-    - ${drop_channels}
+    # - ${drop_channels}
     # - ${mask_channels}
     - ${logspec}
 

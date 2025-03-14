@@ -305,3 +305,31 @@ class TDSLSTMEncoder(nn.Module):
         x = self.fc_block(x) # Apply FC transformation
         x = self.out_layer(x)
         return x
+
+class TDSGRUEncoder(nn.Module):
+    def __init__(
+            self,
+            num_features: int,
+            gru_hidden_size: int = 128,
+            num_gru_layers: int = 4,
+    ) -> None:
+        super().__init__()
+
+        self.gru_layers = nn.GRU(
+            input_size=num_features,
+            hidden_size=gru_hidden_size,
+            num_layers=num_gru_layers,
+            batch_first=False,  # Input shape: (T, N, num_features)
+            bidirectional=True
+        )
+
+        # Fully connected block (remains the same)
+        self.fc_block = TDSFullyConnectedBlock(gru_hidden_size * 2)
+        self.out_layer = nn.Linear(gru_hidden_size * 2, num_features)
+
+    def forward(self, inputs: torch.Tensor) -> torch.Tensor:
+        x, _ = self.gru_layers(inputs)  # (T, N, gru_hidden_size * 2)
+        x = self.fc_block(x)  # Apply FC transformation
+        x = self.out_layer(x)
+        # logging.getLogger(__name__).warning("forward step GRU run")
+        return x

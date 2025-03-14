@@ -70,3 +70,28 @@ All models trained for 40 epochs; testing on base TDSConvEncoder
                    'test/IER': 9.920034408569336,
                    'test/DER': 1.6857575178146362,
                    'test/SER': 17.657228469848633}]}
+
+Testing GRU (40 epochs, changing hop_size)
+100 Hz STFT Windowing (hop_size = 20)
+{'val_metrics': [{'val/loss': 0.6701098680496216,
+                  'val/CER': 21.023483276367188,
+                  'val/IER': 4.89587926864624,
+                  'val/DER': 2.171023368835449,
+                  'val/SER': 13.956579208374023}],
+ 'test_metrics': [{'test/loss': 0.63970547914505,
+                   'test/CER': 20.920682907104492,
+                   'test/IER': 3.4147396087646484,
+                   'test/DER': 2.3557381629943848,
+                   'test/SER': 15.150205612182617}]}
+
+80 Hz STFT Windowing (hop_size = 25)
+{'val_metrics': [{'val/loss': 0.6319199204444885,
+                  'val/CER': 19.84935760498047,
+                  'val/IER': 4.364200115203857,
+                  'val/DER': 2.215330123901367,
+                  'val/SER': 13.269826889038086}],
+ 'test_metrics': [{'test/loss': 0.6116560101509094,
+                   'test/CER': 20.401988983154297,
+                   'test/IER': 2.9608817100524902,
+                   'test/DER': 2.3341257572174072,
+                   'test/SER': 15.106980323791504}]}

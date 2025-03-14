@@ -25,7 +25,8 @@ from emg2qwerty.modules import (
     MultiBandRotationInvariantMLP,
     SpectrogramNorm,
     TDSConvEncoder,
-    TDSLSTMEncoder
+    TDSLSTMEncoder,
+    TDSGRUEncoder
 )
 from emg2qwerty.transforms import Transform
 
@@ -170,10 +171,10 @@ class TDSConvCTCModule(pl.LightningModule):
             ),
             # (T, N, num_features)
             nn.Flatten(start_dim=2),
-            TDSConvEncoder(
+            TDSGRUEncoder(
                 num_features=num_features,
-                block_channels=block_channels,
-                kernel_width=kernel_width,
+                gru_hidden_size=128,
+                num_gru_layers=4,
             ),
             # (T, N, num_classes)
             nn.Linear(num_features, charset().num_classes),
