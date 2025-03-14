@@ -308,7 +308,6 @@ class TDSLSTMEncoder(nn.Module):
         x = self.fc_block(x)  
         x = self.out_layer(x)
         
-        logging.getLogger(__name__).warning("forward step LSTM run")
         return x
 
 class CNNRNNHybrid(nn.Module):
@@ -364,8 +363,6 @@ class CNNRNNHybrid(nn.Module):
         # Fully connected layers
         x = self.fc_block(x)
         x = self.out_layer(x)
-
-        logging.getLogger(__name__).warning("forward step LSTM run")
 
         return x
 

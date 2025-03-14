@@ -135,7 +135,7 @@ class WindowedEMGDataModule(pl.LightningDataModule):
             shuffle=False,
             num_workers=self.num_workers,
             collate_fn=WindowedEMGDataset.collate,
-            pin_memory=True,
+            pin_memory=False,
             persistent_workers=True,
         )
 
@@ -210,8 +210,6 @@ class TDSConvCTCModule(pl.LightningModule):
         input_lengths = batch["input_lengths"]
         target_lengths = batch["target_lengths"]
         N = len(input_lengths)  # batch_size
-        print(f"Batch size (N): {N}")
-        print(f"Input lengths: {input_lengths}")
         emissions = self.forward(inputs)
 
         # Shrink input lengths by an amount equivalent to the conv encoder's
