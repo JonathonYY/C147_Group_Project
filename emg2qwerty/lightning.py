@@ -152,8 +152,8 @@ class TDSConvCTCModule(pl.LightningModule):
         optimizer: DictConfig,
         lr_scheduler: DictConfig,
         decoder: DictConfig,
-        gru_hidden_size: int = 192,
-        num_gru_layers: int = 6,
+        gru_hidden_size: int = 128,
+        num_gru_layers: int = 4,
     ) -> None:
         super().__init__()
         self.save_hyperparameters()
