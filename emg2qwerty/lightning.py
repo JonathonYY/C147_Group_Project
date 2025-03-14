@@ -119,7 +119,7 @@ class WindowedEMGDataModule(pl.LightningDataModule):
             shuffle=False,
             num_workers=self.num_workers,
             collate_fn=WindowedEMGDataset.collate,
-            pin_memory=True,
+            pin_memory=False,
             persistent_workers=True,
         )
 
@@ -152,8 +152,8 @@ class TDSConvCTCModule(pl.LightningModule):
         optimizer: DictConfig,
         lr_scheduler: DictConfig,
         decoder: DictConfig,
-        gru_hidden_size: int = 128,
-        num_gru_layers: int = 4,
+        gru_hidden_size: int = 192,
+        num_gru_layers: int = 6,
     ) -> None:
         super().__init__()
         self.save_hyperparameters()
