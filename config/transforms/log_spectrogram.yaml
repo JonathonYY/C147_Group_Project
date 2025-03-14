@@ -22,7 +22,7 @@ resample:
 # in_features in tds_conv_ctc.yaml
 drop_channels:
   _target_: emg2qwerty.transforms.DropChannels
-  drop_channels: [8, 14, 5, 12, 2, 3, 4, 13]
+  drop_channels: [7, 10, 0, 15, 6, 11, 9, 1]
 
 mask_channels:
   _target_: emg2qwerty.transforms.ChannelMask
@@ -31,7 +31,7 @@ mask_channels:
 logspec:
   _target_: emg2qwerty.transforms.LogSpectrogram
   n_fft: 64
-  hop_length: 20  # Downsamples from 2kHz to 100Hz
+  hop_length: 16  # Downsamples from 2kHz to 125Hz
 
 specaug:
   _target_: emg2qwerty.transforms.SpecAugment

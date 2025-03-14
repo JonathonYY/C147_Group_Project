@@ -257,3 +257,66 @@ Mask channel 15:
                    'test/IER': 80.89474487304688,
                    'test/DER': 0.0,
                    'test/SER': 6.073049545288086}]}
+
+
+For the GRU model:
+
+Baseline (10 epochs):
+{'val_metrics': [{'val/loss': 1.8598884344100952,
+                  'val/CER': 74.39078521728516,
+                  'val/IER': 66.6592788696289,
+                  'val/DER': 0.022153301164507866,
+                  'val/SER': 7.709348678588867}],
+ 'test_metrics': [{'test/loss': 1.8248542547225952,
+                   'test/CER': 69.5915298461914,
+                   'test/IER': 58.65571594238281,
+                   'test/DER': 0.021612275391817093,
+                   'test/SER': 10.914198875427246}]}
+
+Mask channel 0:
+{'val_metrics': [{'val/loss': 2.1374714374542236,
+                  'val/CER': 78.73283386230469,
+                  'val/IER': 72.84004974365234,
+                  'val/DER': 0.0,
+                  'val/SER': 5.892777919769287}],
+ 'test_metrics': [{'test/loss': 2.1430609226226807,
+                   'test/CER': 74.51912689208984,
+                   'test/IER': 65.59325408935547,
+                   'test/DER': 0.0,
+                   'test/SER': 8.925869941711426}]}
+
+Mask channel 1:
+{'val_metrics': [{'val/loss': 2.165755271911621,
+                  'val/CER': 80.83739471435547,
+                  'val/IER': 76.09658813476562,
+                  'val/DER': 0.0,
+                  'val/SER': 4.740806579589844}],
+ 'test_metrics': [{'test/loss': 2.2034597396850586,
+                   'test/CER': 78.47417449951172,
+                   'test/IER': 71.68791961669922,
+                   'test/DER': 0.021612275391817093,
+                   'test/SER': 6.764642238616943}]}
+
+Mask channel 2:
+{'val_metrics': [{'val/loss': 2.1333937644958496,
+                  'val/CER': 82.45458221435547,
+                  'val/IER': 79.06513214111328,
+                  'val/DER': 0.0,
+                  'val/SER': 3.3894550800323486}],
+ 'test_metrics': [{'test/loss': 2.2089834213256836,
+                   'test/CER': 83.12081146240234,
+                   'test/IER': 79.5547866821289,
+                   'test/DER': 0.0,
+                   'test/SER': 3.566025495529175}]}
+
+Mask channel 3:
+{'val_metrics': [{'val/loss': 2.1758737564086914,
+                  'val/CER': 85.86619567871094,
+                  'val/IER': 83.7394790649414,
+                  'val/DER': 0.0,
+                  'val/SER': 2.1267168521881104}],
+ 'test_metrics': [{'test/loss': 2.2128326892852783,
+                   'test/CER': 86.62200164794922,
+                   'test/IER': 85.36849212646484,
+                   'test/DER': 0.0,
+                   'test/SER': 1.2535120248794556}]}
