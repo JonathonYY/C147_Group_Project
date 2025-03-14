@@ -152,6 +152,8 @@ class TDSConvCTCModule(pl.LightningModule):
         optimizer: DictConfig,
         lr_scheduler: DictConfig,
         decoder: DictConfig,
+        gru_hidden_size: int = 128,
+        num_gru_layers: int = 4,
     ) -> None:
         super().__init__()
         self.save_hyperparameters()
@@ -173,8 +175,8 @@ class TDSConvCTCModule(pl.LightningModule):
             nn.Flatten(start_dim=2),
             TDSGRUEncoder(
                 num_features=num_features,
-                gru_hidden_size=128,
-                num_gru_layers=4
+                gru_hidden_size=gru_hidden_size,
+                num_gru_layers=num_gru_layers,
             ),
             # (T, N, num_classes)
             nn.Linear(num_features, charset().num_classes),
