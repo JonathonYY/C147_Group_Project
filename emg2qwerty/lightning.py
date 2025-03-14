@@ -25,7 +25,8 @@ from emg2qwerty.modules import (
     MultiBandRotationInvariantMLP,
     SpectrogramNorm,
     TDSConvEncoder,
-    TDSLSTMEncoder
+    TDSLSTMEncoder,
+    TDSGRUEncoder
 )
 from emg2qwerty.transforms import Transform
 
@@ -118,7 +119,7 @@ class WindowedEMGDataModule(pl.LightningDataModule):
             shuffle=False,
             num_workers=self.num_workers,
             collate_fn=WindowedEMGDataset.collate,
-            pin_memory=True,
+            pin_memory=False,
             persistent_workers=True,
         )
 
@@ -133,7 +134,7 @@ class WindowedEMGDataModule(pl.LightningDataModule):
             shuffle=False,
             num_workers=self.num_workers,
             collate_fn=WindowedEMGDataset.collate,
-            pin_memory=True,
+            pin_memory=False,
             persistent_workers=True,
         )
 
@@ -151,6 +152,8 @@ class TDSConvCTCModule(pl.LightningModule):
         optimizer: DictConfig,
         lr_scheduler: DictConfig,
         decoder: DictConfig,
+        gru_hidden_size: int = 192,
+        num_gru_layers: int = 6,
     ) -> None:
         super().__init__()
         self.save_hyperparameters()
@@ -170,10 +173,10 @@ class TDSConvCTCModule(pl.LightningModule):
             ),
             # (T, N, num_features)
             nn.Flatten(start_dim=2),
-            TDSConvEncoder(
+            TDSGRUEncoder(
                 num_features=num_features,
-                block_channels=block_channels,
-                kernel_width=kernel_width,
+                gru_hidden_size=gru_hidden_size,
+                num_gru_layers=num_gru_layers,
             ),
             # (T, N, num_classes)
             nn.Linear(num_features, charset().num_classes),
